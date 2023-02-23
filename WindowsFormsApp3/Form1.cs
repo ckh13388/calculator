@@ -20,43 +20,43 @@ namespace WindowsFormsApp3
         }
 
         // text upon user input for further checking before displaying
-        public string checkText; 
+        public string InputText; 
 
         // to store all user input before clearing
-        public List<string> history = new List<string>();
+        public List<string> History = new List<string>();
 
-
-        static (bool,double) Check(string s)
+        // check if a string is able to form a valid number
+        static (bool,double) IsNumberCheck(string Str)
         {
             // check user input whether it is making a correct number
-            bool result = double.TryParse(s, out double value);
-            return (result, value);
+            bool Result = double.TryParse(Str, out double Value);
+            return (Result, Value);
 
         }
 
-        static void helper(string s, string symbol, List<string> l)
+        // check and prevent multiple input of symbols "+-/*"
+        static void SymbolCheck(string Str, string symbol, List<string> Hist)
         {
             
             try
             {
                 // check if it is a valid number
-                if (Check(s).Item1)
+                if (IsNumberCheck(Str).Item1)
                 {
-                    l.Add(s);
-                    //s = "";
+                    Hist.Add(Str);
                 }
 
                 // check if the last input is one of "+-*/", replace if suitable
-                char c = l.Last()[l.Last().Length - 1];
+                char c = Hist.Last()[Hist.Last().Length - 1];
                 if ((Char.IsDigit(c)) || (c == '.'))
                 {
-                    l.Add(symbol);
+                    Hist.Add(symbol);
                 }
 
                 else
                 {
-                    l.RemoveAt(l.Count - 1);
-                    l.Add(symbol);
+                    Hist.RemoveAt(Hist.Count - 1);
+                    Hist.Add(symbol);
                 }
             }
             catch
@@ -65,179 +65,179 @@ namespace WindowsFormsApp3
             }
         }
 
-        private void btnPlus_Click(object sender, EventArgs e)
+        private void BtnPlus_Click(object sender, EventArgs e)
         {
-            helper(checkText, "+", history);
-            label1.Text = checkText;
-            checkText = "";
-            label2.Text = string.Join(" ", history);
+            SymbolCheck(InputText, "+", History);
+            label1.Text = InputText;
+            InputText = "";
+            label2.Text = string.Join(" ", History);
         }
 
-        private void btnMinus_Click(object sender, EventArgs e)
+        private void BtnMinus_Click(object sender, EventArgs e)
         {
-            helper(checkText, "-", history);
-            label1.Text = checkText;
-            checkText = "";
-            label2.Text = string.Join(" ", history);
+            SymbolCheck(InputText, "-", History);
+            label1.Text = InputText;
+            InputText = "";
+            label2.Text = string.Join(" ", History);
         }
 
-        private void btnMultiply_Click(object sender, EventArgs e)
+        private void BtnMultiply_Click(object sender, EventArgs e)
         {
-            helper(checkText, "*", history);
-            label1.Text = checkText;
-            checkText = "";
-            label2.Text = string.Join(" ", history);
+            SymbolCheck(InputText, "*", History);
+            label1.Text = InputText;
+            InputText = "";
+            label2.Text = string.Join(" ", History);
         }
 
-        private void btnDivide_Click(object sender, EventArgs e)
+        private void BtnDivide_Click(object sender, EventArgs e)
         {
-            helper(checkText, "/", history);
-            label1.Text = checkText;
-            checkText = "";
-            label2.Text = string.Join(" ", history);
+            SymbolCheck(InputText, "/", History);
+            label1.Text = InputText;
+            InputText = "";
+            label2.Text = string.Join(" ", History);
         }
 
-        private void btnEq_Click(object sender, EventArgs e)
+        private void BtnEq_Click(object sender, EventArgs e)
         {
-            // check if input is a valid number
-            if (history.Count > 1)
+            // 
+            if (History.Count > 1)
             {
-                if (Check(checkText).Item1)
+                if (IsNumberCheck(InputText).Item1)
                 {
-                    history.Add(checkText); 
+                    History.Add(InputText); 
 
                     DataTable table = new DataTable();
 
                     // DataTable.Compute will work on "*/" in prior to "+-"
-                    double result = Convert.ToDouble(table.Compute(string.Join("", history), string.Empty));
-                    label1.Text = result.ToString();
-                    label2.Text = string.Join(" ", history) + " = " + result.ToString();
-                    checkText = "";
-                    history.Clear();
+                    double Result = Convert.ToDouble(table.Compute(string.Join("", History), string.Empty));
+                    label1.Text = Result.ToString();
+                    label2.Text = string.Join(" ", History) + " = " + Result.ToString();
+                    InputText = "";
+                    History.Clear();
                 }
             }
         }
 
-        private void btnDot_Click(object sender, EventArgs e)
+        private void BtnDot_Click(object sender, EventArgs e)
         {
-            if (String.IsNullOrEmpty(checkText))
+            if (String.IsNullOrEmpty(InputText))
             {
-                checkText = "0."; 
+                InputText = "0."; 
             }
             else
             {
-                string s = checkText + "."; 
-                if (Check(s).Item1)
+                string s = InputText + "."; 
+                if (IsNumberCheck(s).Item1)
                 {
-                    checkText = s;
+                    InputText = s;
                 }
             }
 
-            label1.Text = checkText;
+            label1.Text = InputText;
         }
 
-        private void btnAllClear_Click(object sender, EventArgs e)
+        private void BtnAllClear_Click(object sender, EventArgs e)
         {
-            checkText = "";
+            InputText = "";
             label1.Text = "";
             label2.Text = "";
-            history.Clear();
+            History.Clear();
 
         }
-        private void btnClear_Click(object sender, EventArgs e)
+        private void BtnClear_Click(object sender, EventArgs e)
         {
-            checkText = "";
+            InputText = "";
             label1.Text = "";
         }
 
-        private void btnBack_Click(object sender, EventArgs e)
+        private void BtnBack_Click(object sender, EventArgs e)
         {
-            if (!string.IsNullOrEmpty(checkText))
+            if (!string.IsNullOrEmpty(InputText))
             {
-                checkText = checkText.Substring(0, checkText.Length - 1); 
+                InputText = InputText.Substring(0, InputText.Length - 1); 
             }
             
-            label1.Text = checkText;
+            label1.Text = InputText;
         }
 
-        private void btnPN_Click(object sender, EventArgs e)
+        private void BtnPN_Click(object sender, EventArgs e)
         {
-            if (Check(checkText).Item1)
+            if (IsNumberCheck(InputText).Item1)
             {
 
-                if (Check(checkText).Item2 > 0)
+                if (IsNumberCheck(InputText).Item2 > 0)
                 {
-                    checkText = "-" + checkText; 
+                    InputText = "-" + InputText; 
                 }
-                else if (Check(checkText).Item2 < 0)
+                else if (IsNumberCheck(InputText).Item2 < 0)
                 {
-                    checkText = checkText.Trim('-');
+                    InputText = InputText.Trim('-');
                 }
-                label1.Text = checkText;
+                label1.Text = InputText;
             }
             
 
         }
-        private void numpad0_Click(object sender, EventArgs e)
+        private void Numpad0_Click(object sender, EventArgs e)
         {
 
-            checkText += "0";
-            label1.Text = checkText;
+            InputText += "0";
+            label1.Text = InputText;
             
         }
 
-        private void numpad1_Click(object sender, EventArgs e)
+        private void Numpad1_Click(object sender, EventArgs e)
         {
-            checkText += "1";
-            label1.Text = checkText;
+            InputText += "1";
+            label1.Text = InputText;
         }
 
-        private void numpad2_Click(object sender, EventArgs e)
+        private void Numpad2_Click(object sender, EventArgs e)
         {
-            checkText += "2";
-            label1.Text = checkText;
+            InputText += "2";
+            label1.Text = InputText;
         }
 
-        private void numpad3_Click(object sender, EventArgs e)
+        private void Numpad3_Click(object sender, EventArgs e)
         {
-            checkText += "3";
-            label1.Text = checkText;
+            InputText += "3";
+            label1.Text = InputText;
         }
 
-        private void numpad4_Click(object sender, EventArgs e)
+        private void Numpad4_Click(object sender, EventArgs e)
         {
-            checkText += "4";
-            label1.Text = checkText;
+            InputText += "4";
+            label1.Text = InputText;
         }
 
-        private void numpad5_Click(object sender, EventArgs e)
+        private void Numpad5_Click(object sender, EventArgs e)
         {
-            checkText += "5";
-            label1.Text = checkText;
+            InputText += "5";
+            label1.Text = InputText;
         }
 
-        private void numpad6_Click(object sender, EventArgs e)
+        private void Numpad6_Click(object sender, EventArgs e)
         {
-            checkText += "6";
-            label1.Text = checkText;
+            InputText += "6";   
+            label1.Text = InputText;
         }
 
-        private void numpad7_Click(object sender, EventArgs e)
+        private void Numpad7_Click(object sender, EventArgs e)
         {
-            checkText += "7";
-            label1.Text = checkText;
+            InputText += "7";
+            label1.Text = InputText;
         }
 
-        private void numpad8_Click(object sender, EventArgs e)
+        private void Numpad8_Click(object sender, EventArgs e)
         {
-            checkText += "8";
-            label1.Text = checkText;
+            InputText += "8";
+            label1.Text = InputText;
         }
 
-        private void numpad9_Click(object sender, EventArgs e)
+        private void Numpad9_Click(object sender, EventArgs e)
         {
-            checkText += "9";
-            label1.Text = checkText;
+            InputText += "9";
+            label1.Text = InputText;
         }
 
     }
